@@ -84,7 +84,7 @@ By completing this analysis, we aim to provide actionable insights that will sup
 
 #### **1\. Inspect the Schema**
 
-sql
+```sql
 
 SELECT \*
 
@@ -93,8 +93,6 @@ FROM \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.february24\`
 LIMIT 10;
 
 #### **2\. Merge All Monthly Tables**
-
-sql
 
 CREATE OR REPLACE TABLE \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.merged_trips\` AS
 
@@ -134,8 +132,6 @@ SELECT \* FROM \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.september23\
 
 #### **3\. Add ride_length and day_of_week Columns**
 
-sql
-
 CREATE OR REPLACE TABLE \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.processed_trips\` AS
 
 SELECT
@@ -151,8 +147,6 @@ FROM
 \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.merged_trips\`;
 
 #### **4\. Clean and Filter Data**
-
-sql
 
 CREATE OR REPLACE TABLE \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.cleaned_trips\` AS
 
@@ -173,8 +167,6 @@ AND started_at IS NOT NULL
 AND ended_at IS NOT NULL;
 
 #### **5\. Ensure Consistent Column Formatting**
-
-sql
 
 CREATE OR REPLACE TABLE \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.final_trips\` AS
 
@@ -198,13 +190,15 @@ FROM
 
 \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.cleaned_trips\`;
 
+```
+
 ### **Verification and Initial Analysis**
 
-Run these queries to ensure the data is ready for analysis:
+I ran these queries to ensure the data is ready for analysis:
 
 1. **Average Ride Length by User Type**
 
-sql
+```sql
 
 SELECT
 
@@ -221,8 +215,6 @@ GROUP BY
 member_casual;
 
 1. **Ride Frequency by Day of the Week**
-
-sql
 
 SELECT
 
@@ -243,6 +235,8 @@ member_casual, day_of_week
 ORDER BY
 
 day_of_week;
+
+```
 
 ### **Deliverable: Description of Data Sources**
 
@@ -300,8 +294,6 @@ day_of_week;
 
 **Documentation of any cleaning or manipulation of data:**
 
-- Detailed SQL queries and steps used for data processing and cleaning are documented below
-
 —----------------------------------------------------------------------------------------------------------------------------
 
 ### **Analysis Phase**
@@ -342,19 +334,23 @@ Since the data is already in BigQuery, this step is complete. We worked with the
 **SQL Queries:**
 
 **Get Total Number of Rows  
-**sql  
 \-- Get total number of rows
+
+```sql
 
 SELECT COUNT(\*) AS total_rows
 
 FROM \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.cleaned_final_trips\`;
 
+```
+
 **Result:**  
 Total Rows: 4,797,860
 
 **Get Distinct Values for Key Columns  
-**sql  
 \-- Get distinct values for key columns
+
+```sql
 
 SELECT
 
@@ -365,6 +361,7 @@ COUNT(DISTINCT rideable_type) AS unique_bike_types,
 COUNT(DISTINCT member_casual) AS unique_user_types
 
 FROM \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.cleaned_final_trips\`;
+```
 
 **Result:**  
 unique_ride_ids, unique_bike_types, unique_user_types
@@ -372,8 +369,8 @@ unique_ride_ids, unique_bike_types, unique_user_types
 4,797,860, 3, 2
 
 **Summary Statistics for Ride Length  
-**sql  
 \-- Get summary statistics for ride_length
+```sql
 
 SELECT
 
@@ -384,7 +381,7 @@ MAX(ride_length) AS max_ride_length,
 AVG(ride_length) AS avg_ride_length
 
 FROM \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.cleaned_final_trips\`;
-
+```
 **Result:**  
 min_ride_length, max_ride_length, avg_ride_length
 
@@ -397,7 +394,7 @@ We discovered that some ride lengths were negative due to inverted timestamps.
 **SQL Queries:**
 
 **Identify Records with Negative Ride Lengths  
-**sql  
+```sql
 SELECT
 
 ride_id,
@@ -412,8 +409,12 @@ FROM \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.final_trips\`
 
 WHERE ride_length < 0;
 
+```
+
 **Correct the Inverted Timestamps  
-**sql  
+
+```sql
+
 CREATE OR REPLACE TABLE \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.corrected_trips\` AS
 
 SELECT
@@ -468,16 +469,24 @@ FROM
 
 \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.final_trips\`;
 
+```
+
 **Check for Corrected Records  
-**sql  
+
+```sql
+
 SELECT \*
 
 FROM \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.corrected_trips\`
 
 WHERE ride_length < 0;
 
+```
+
 **Create Cleaned and Updated Final Table  
-**sql  
+
+```sql
+
 CREATE OR REPLACE TABLE \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.cleaned_final_trips\` AS
 
 SELECT \*
@@ -485,11 +494,13 @@ SELECT \*
 FROM \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.corrected_trips\`
 
 WHERE ride_length >= 0;
+```
 
 #### **Step 4: Perform Calculations and Identify Trends**
 
+```sql
+
 **Average Ride Length by User Type  
-**sql  
 SELECT
 
 member_casual,
@@ -499,9 +510,9 @@ AVG(ride_length) AS avg_ride_length
 FROM \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.cleaned_final_trips\`
 
 GROUP BY member_casual;
+```
 
 **Result:  
-**sql  
 member_casual, avg_ride_length
 
 casual, 1,689.86
@@ -509,7 +520,8 @@ casual, 1,689.86
 member, 792.70
 
 **Number of Rides by Day of the Week  
-**sql  
+```sql
+
 SELECT
 
 day_of_week,
@@ -539,7 +551,7 @@ WHEN 'Friday' THEN 6
 WHEN 'Saturday' THEN 7
 
 END;
-
+```
 **Result:**  
 day_of_week, ride_count
 
@@ -558,7 +570,8 @@ Friday, 718,244
 Saturday, 758,900
 
 **Ride Count by Bike Type  
-**sql  
+```sql
+
 SELECT
 
 rideable_type,
@@ -568,7 +581,7 @@ COUNT(\*) AS ride_count
 FROM \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.cleaned_final_trips\`
 
 GROUP BY rideable_type;
-
+```
 **Result:**  
 rideable_type, ride_count
 
@@ -585,7 +598,8 @@ To ensure data accuracy, we investigated rides with durations longer than 43,200
 **SQL Queries and Results:**
 
 **Identify Outliers:  
-**sql  
+```sql
+
 SELECT \*
 
 FROM \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.cleaned_final_trips\`
@@ -607,9 +621,8 @@ FROM \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.cleaned_final_trips\`
 WHERE ride_length > 43200
 
 GROUP BY member_casual;
-
+```
 **Result:  
-**sql  
 member_casual, outlier_count
 
 casual, 7,101
@@ -617,8 +630,8 @@ casual, 7,101
 member, 2,013
 
 **Analyze Outliers by Bike Type:  
-**sql  
 \-- Count of outliers by bike type
+```sql
 
 SELECT
 
@@ -631,7 +644,7 @@ FROM \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.cleaned_final_trips\`
 WHERE ride_length > 43200
 
 GROUP BY rideable_type;
-
+```
 **Result:**  
 rideable_type, outlier_count
 
@@ -644,7 +657,7 @@ electric_bike, 2
 #### **Step 6: Exclude Outliers and Re-run Analysis**
 
 **Exclude Outliers:  
-**sql
+```sql
 
 CREATE OR REPLACE TABLE \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.cleaned_final_trips_excl_outliers\` AS
 
@@ -654,7 +667,7 @@ FROM \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.cleaned_final_trips\`
 
 WHERE ride_length <= 86400;
 
-\`\`\`
+```
 
 2\. \*\*Re-run Key Analyses\*\*
 
@@ -662,7 +675,7 @@ WHERE ride_length <= 86400;
 
 1\. \*\*Average Ride Length by User Type\*\*
 
-\`\`\`sql
+```sql
 
 SELECT
 
@@ -674,7 +687,7 @@ FROM \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.cleaned_final_trips_ex
 
 GROUP BY member_casual;
 
-\`\`\`
+```
 
 \*\*Result:\*\*
 
@@ -690,7 +703,7 @@ member, 802.65
 
 2\. \*\*Number of Rides by Day of the Week\*\*
 
-\`\`\`sql
+```sql
 
 SELECT
 
@@ -722,7 +735,7 @@ WHEN 'Saturday' THEN 7
 
 END;
 
-\`\`\`
+```
 
 \*\*Result:\*\*
 
@@ -748,7 +761,7 @@ Saturday, 752,312
 
 3\. \*\*Ride Count by Bike Type\*\*
 
-\`\`\`sql
+```sql
 
 SELECT
 
@@ -760,7 +773,7 @@ FROM \`casestudy1-429513.Cyclistic_BikeShare_Last12Months.cleaned_final_trips_ex
 
 GROUP BY rideable_type;
 
-\`\`\`
+```
 
 \*\*Result:\*\*
 
