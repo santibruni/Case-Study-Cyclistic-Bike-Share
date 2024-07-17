@@ -870,6 +870,8 @@ These insights help confirm the initial findings and provide a clearer understan
 5. **Average Number of Rides by Day of the Week (Casual vs Member Users)**
     - **Key Finding:** Casual users have higher average ride counts on weekends, while members have a more even distribution of rides throughout the week.
 
+### **Visuals**
+![Average Length Ride by Customer Type](https://github.com/santibruni/Case-Study-Cyclistic-Bike-Share/blob/main/image1.png?raw=true)
 
 ### **R code for Visuals**
 
