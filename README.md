@@ -873,8 +873,15 @@ These insights help confirm the initial findings and provide a clearer understan
 ### **Visuals**
 ![Average Length Ride by Customer Type](https://github.com/santibruni/Case-Study-Cyclistic-Bike-Share/blob/main/image1.png?raw=true)
 
+![Number of Rides by Day of the Week](https://github.com/santibruni/Case-Study-Cyclistic-Bike-Share/blob/main/NRidesDWeek.png?raw=true)
+
+![Ride Count by Bike Type](https://github.com/santibruni/Case-Study-Cyclistic-Bike-Share/blob/main/RCbyBT.png?raw=true)
+
+![Casual VS Members by Day of the Week](https://github.com/santibruni/Case-Study-Cyclistic-Bike-Share/blob/main/casualVSmember.png?raw=true)
+
 ### **R code for Visuals**
 
+```r
 # Load necessary libraries
 library(ggplot2)
 
@@ -959,6 +966,7 @@ ggplot(combined_avg_ride_count_df, aes(x = factor(day_of_week, levels = c('Mon',
 # Save the plot
 ggsave("average_number_of_rides_by_day_of_week_combined.png")
 
+```
 —----------------------------------------------------------
 
 ### **Interpretation of Findings**
